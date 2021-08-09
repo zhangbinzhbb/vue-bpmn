@@ -8,23 +8,33 @@
         <el-input v-model="form.name" @input="nameChange"></el-input>
       </el-form-item>
       <el-form-item label="节点颜色">
-        <el-color-picker v-model="form.color" @active-change="colorChange"></el-color-picker>
+        <el-color-picker
+          v-model="form.color"
+          @active-change="colorChange"
+        ></el-color-picker>
       </el-form-item>
       <!-- 任务节点允许选择人员 -->
       <el-form-item label="节点人员" v-if="userTask">
-        <el-select v-model="form.userType" placeholder="请选择" @change="typeChange">
+        <el-select
+          v-model="form.userType"
+          placeholder="请选择"
+          @change="typeChange"
+        >
           <el-option value="assignee" label="指定人员"></el-option>
           <el-option value="candidateUsers" label="候选人员"></el-option>
           <el-option value="candidateGroups" label="角色/岗位"></el-option>
         </el-select>
       </el-form-item>
       <!-- 指定人员 -->
-      <el-form-item label="指定人员" v-if="userTask && form.userType === 'assignee'">
+      <el-form-item
+        label="指定人员"
+        v-if="userTask && form.userType === 'assignee'"
+      >
         <el-select
           v-model="form.assignee"
           placeholder="请选择"
           key="1"
-          @change="(value) => addUser({assignee: value})"
+          @change="(value) => addUser({ assignee: value })"
         >
           <el-option
             v-for="item in users"
@@ -35,13 +45,18 @@
         </el-select>
       </el-form-item>
       <!-- 候选人员 -->
-      <el-form-item label="候选人员" v-else-if="userTask && form.userType === 'candidateUsers'">
+      <el-form-item
+        label="候选人员"
+        v-else-if="userTask && form.userType === 'candidateUsers'"
+      >
         <el-select
           v-model="form.candidateUsers"
           placeholder="请选择"
           key="2"
           multiple
-          @change="(value) => addUser({candidateUsers: value.join(',') || value})"
+          @change="
+            (value) => addUser({ candidateUsers: value.join(',') || value })
+          "
         >
           <el-option
             v-for="item in users"
@@ -52,11 +67,14 @@
         </el-select>
       </el-form-item>
       <!-- 角色/岗位 -->
-      <el-form-item label="角色/岗位" v-else-if="userTask && form.userType === 'candidateGroups'">
+      <el-form-item
+        label="角色/岗位"
+        v-else-if="userTask && form.userType === 'candidateGroups'"
+      >
         <el-select
           v-model="form.candidateGroups"
           placeholder="请选择"
-          @change="(value) => addUser({candidateGroups: value})"
+          @change="(value) => addUser({ candidateGroups: value })"
         >
           <el-option
             v-for="item in roles"
@@ -87,8 +105,8 @@ export default {
   props: {
     modeler: {
       type: Object,
-      required: true
-    }
+      required: true,
+    },
   },
   computed: {
     userTask() {
@@ -102,44 +120,44 @@ export default {
         return;
       }
       return this.element.type === "bpmn:SequenceFlow";
-    }
+    },
   },
   data() {
     return {
       form: {
         id: "",
         name: "",
-        color: null
+        color: null,
       },
       element: {},
       users: [
         {
           value: "zhangsan",
-          label: "张三"
+          label: "张三",
         },
         {
           value: "lisi",
-          label: "李四"
+          label: "李四",
         },
         {
           value: "wangwu",
-          label: "王五"
-        }
+          label: "王五",
+        },
       ],
       roles: [
         {
           value: "manager",
-          label: "经理"
+          label: "经理",
         },
         {
           value: "personnel",
-          label: "人事"
+          label: "人事",
         },
         {
           value: "charge",
-          label: "主管"
-        }
-      ]
+          label: "主管",
+        },
+      ],
     };
   },
   mounted() {
@@ -148,14 +166,15 @@ export default {
   methods: {
     handleModeler() {
       // 监听节点选择变化
-      this.modeler.on("selection.changed", e => {
+      this.modeler.on("selection.changed", (e) => {
+        console.log("e-->", e);
         const element = e.newSelection[0];
         this.element = element;
         console.log(this.element);
         if (!element) return;
         this.form = {
           ...element.businessObject,
-          ...element.businessObject.$attrs
+          ...element.businessObject.$attrs,
         };
         if (this.form.userType === "candidateUsers") {
           this.form["candidateUsers"] =
@@ -164,7 +183,7 @@ export default {
       });
 
       //  监听节点属性变化
-      this.modeler.on("element.changed", e => {
+      this.modeler.on("element.changed", (e) => {
         const { element } = e;
         if (!element) return;
         //  新增节点需要更新回属性面板
@@ -184,7 +203,7 @@ export default {
       const modeling = this.modeler.get("modeling");
       modeling.setColor(this.element, {
         fill: null,
-        stroke: color
+        stroke: color,
       });
       modeling.updateProperties(this.element, { color: color });
     },
@@ -192,14 +211,14 @@ export default {
     addUser(properties) {
       this.updateProperties(
         Object.assign(properties, {
-          userType: Object.keys(properties)[0]
+          userType: Object.keys(properties)[0],
         })
       );
     },
     // 切换人员类型
     typeChange() {
       const types = ["assignee", "candidateUsers", "candidateGroups"];
-      types.forEach(type => {
+      types.forEach((type) => {
         delete this.element.businessObject.$attrs[type];
         delete this.form[type];
       });
@@ -208,8 +227,8 @@ export default {
     updateProperties(properties) {
       const modeling = this.modeler.get("modeling");
       modeling.updateProperties(this.element, properties);
-    }
-  }
+    },
+  },
 };
 </script>
 

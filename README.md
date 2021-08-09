@@ -1,5 +1,11 @@
 由于公司前段时间在打造一个开发平台，而我主要负责工作流模块，于是就接触到了`bpmn-js`。但众所周知，`bpmn-js` 文档是全英的，相关资料少，填坑的人更少，所以开发起来并没有那么好上手。于是我研究了一段时间，没少踩坑，但收获颇丰，今天就跟大家分享一下。`PS：以前一直做伸手党，今天要扳回一局，先上效果图～`
 ![](./src/assets/效果图（进阶一）.jpg)
+
+# 建议不要用 cnpm 安装 会有各种诡异的bug 可以通过如下操作解决 npm 下载速度慢的问题
+```
+npm install --registry=https://registry.npm.taobao.org
+```
+
 # 什么是 bpmn-js ?
 一个`BPMN 2.0` 渲染工具，简单来说，就是流程设计器。前端利用这样的一个流程设计器，设计流程，导出 `xml`，然后传给后端。启动 activiti 工作流引擎，最后生成流程实例。
 官网地址：[https://bpmn.io/toolkit/bpmn-js/](https://bpmn.io/toolkit/bpmn-js/)
